@@ -1,0 +1,152 @@
+/* ============================================================
+   CSS
+   色:背景 #eceee6 / 紙 #f7f7f2 / 文字 #2b1d14 / 薄い文字 #6a5b4e / 藍 #27406b / 線 #c9c6b8
+   ============================================================ */
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#eceee6;color:#2b1d14;font-family:"Zen Kaku Gothic New",sans-serif;font-weight:500;line-height:1.8;overflow-x:hidden}
+img,svg{max-width:100%}
+button{font:inherit}
+
+/* 紙のざらざら(ノイズ画像を、ページ全体に重ねる) */
+body::after{content:"";position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;opacity:.48;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='0.7'/%3E%3C/svg%3E");background-size:220px 220px}
+
+/* ---------- トップ ---------- */
+.hero{position:relative;height:100vh;min-height:560px;overflow:hidden}
+.hero-bowl{position:absolute;width:84vh;max-width:64vw;left:50%;top:56%;transform:translate(-50%,-50%);color:#6a5b4e}
+.hero h1{position:absolute;right:5vw;top:7vh;font-family:"Hina Mincho",serif;font-weight:400;writing-mode:vertical-rl;font-size:4.8rem;line-height:1.15;letter-spacing:.12em}
+.scroll-hint{position:absolute;left:50%;bottom:3vh;transform:translateX(-50%);font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:#6a5b4e;display:flex;flex-direction:column;align-items:center;gap:.4rem}
+.scroll-hint::after{content:"";width:1px;height:6vh;background:#6a5b4e}
+
+/* ---------- クイズとモーダル ---------- */
+#quiz{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1.2rem;padding:12vh 6vw;text-align:center}
+.quiz-lead{font-family:"Hina Mincho",serif;font-size:1.1rem;color:#6a5b4e;letter-spacing:.2em}
+.quiz-q{font-family:"Hina Mincho",serif;font-weight:400;font-size:2.9rem;line-height:1.5;letter-spacing:.04em}
+.quiz-block .quiz-q{margin-bottom:.4rem}
+.quiz-options{margin-left:auto;margin-right:auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:2rem;width:100%;max-width:52em}
+.quiz-btn{display:flex;flex-direction:column;align-items:center;gap:.5rem;background:#f7f7f2;color:#2b1d14;border:1.5px solid #c9c6b8;padding:1.4em 1em;cursor:pointer;transition:border-color .2s,transform .2s}
+.quiz-btn:hover{border-color:#27406b;transform:translateY(-3px)}
+.qv{width:100%;max-width:230px;height:32px}
+.quiz-num{font-family:"Hina Mincho",serif;font-weight:400;font-size:1.8rem}
+.bar{display:flex;height:2.2em;width:100%;margin:.4em 0 .8em;overflow:hidden}
+.bar-jp,.bar-im{width:0;transition:width .8s ease}
+.bar-jp{background:#e3bd66}
+.bar-im{background:#b8793e;transition-delay:.15s}
+#modal-overlay.is-open .bar-jp{width:7%}
+#modal-overlay.is-open .bar-im{width:93%}
+.bar-legend{display:flex;justify-content:center;gap:1.4rem;font-size:.8rem;color:#6a5b4e}
+.bar-legend i{display:inline-block;width:.8em;height:.8em;margin-right:.35em}
+/* モーダル:ふだんは見えない。is-open が付くと、ふわっと出る */
+#modal-overlay{display:flex;visibility:hidden;opacity:0;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(43,29,20,.8);z-index:10;align-items:center;justify-content:center;padding:6vw;transition:opacity .3s,visibility .3s}
+#modal-overlay.is-open{visibility:visible;opacity:1}
+#modal{transform:translateY(24px);transition:transform .4s ease;background:#eceee6;color:#2b1d14;padding:2.4em 2em;width:100%;max-width:32em;max-height:88vh;overflow-y:auto;text-align:center;border-top:5px solid #27406b}
+#modal-overlay.is-open #modal{transform:translateY(0)}
+#modal-verdict{display:flex;flex-direction:column;align-items:center;gap:.1em;margin-bottom:.6em}
+#verdict-mark{font-size:4.5rem;line-height:1}
+#verdict-text{font-family:"Hina Mincho",serif;font-weight:400;font-size:1.9rem;letter-spacing:.1em}
+#hint-box,#answer-box,.quiz-block{display:none}
+#q1{display:block}
+#quiz-count{margin-left:.8em;font-size:.8rem;letter-spacing:.1em}
+#hint-box h3{font-size:.85rem;font-weight:500;letter-spacing:.25em;color:#6a5b4e;margin:.4em 0 .5em}
+#modal h3{font-family:"Hina Mincho",serif;font-size:2.2rem;margin:.3em 0 .8em}
+/* word-break:keep-all …… 日本語を途中で折り返さず、<br> の位置で改行する
+   overflow-wrap:anywhere …… ただし、幅に入らないときだけは折り返す */
+.modal-text{word-break:keep-all;overflow-wrap:anywhere;font-size:.95rem;color:#6a5b4e;line-height:2}
+#modal-close{margin-top:1.6em;background:#27406b;color:#f7f7f2;border:none;padding:.7em 2.4em;font-size:1rem;cursor:pointer}
+
+/* ---------- 章見出し(縦書き) ---------- */
+.chapter-head{display:flex;gap:2rem;align-items:flex-start;padding:6vh 8vw 2vh}
+.chapter-head h2{font-family:"Hina Mincho",serif;font-weight:400;writing-mode:vertical-rl;font-size:3.4rem;line-height:1.2;letter-spacing:.06em}
+
+/* ---------- 樽で寝かせる ---------- */
+#ch1{position:relative;height:100vh;display:grid;grid-template-columns:auto 1fr 1fr;align-items:center;padding:0 6vw;gap:4vw}
+.ch-title{font-family:"Hina Mincho",serif;font-weight:400;writing-mode:vertical-rl;font-size:3.4rem;line-height:1.2;letter-spacing:.06em;align-self:center}
+#barrel{width:100%;max-width:440px;justify-self:center}
+.age{font-family:"Hina Mincho",serif}
+.age .num{font-size:3.4rem;font-weight:400;line-height:1}
+.age .unit{font-size:1.4rem;margin-left:.2em}
+.age .years{font-size:1rem;color:#6a5b4e;margin-top:.4em}
+.stage-wrap{position:relative;min-height:13em;margin-top:1.5em}
+.stage-note{margin-top:1.2em;font-size:.78rem;color:#6a5b4e;max-width:26em}
+.stage{position:absolute;top:0;left:0;width:100%;visibility:hidden}
+.aging-note{position:absolute;left:2rem;right:2rem;bottom:1.2rem;font-size:.72rem;letter-spacing:.04em;color:#6a5b4e;text-align:right;line-height:1.5}
+.stage-span{font-size:.85rem;letter-spacing:.12em;color:#6a5b4e;margin-bottom:.2em}
+.stage h3{font-family:"Hina Mincho",serif;font-weight:400;font-size:4.6rem;line-height:1.25;margin-bottom:.35em}
+.stage p{color:#6a5b4e;max-width:22em}
+
+/* ---------- 海を越えて(地図が全面・文字が上に乗る) ---------- */
+#ch2{position:relative}
+.map-stage{position:sticky;top:0;height:100vh;overflow:hidden}
+.map-stage svg{position:absolute;top:0;left:0;width:100%;height:100%;display:block}
+.map-title{position:absolute;top:6vh;left:4vw;color:#6b5442}
+.toggles{position:absolute;top:4vh;left:4vw;display:flex;flex-wrap:wrap;gap:.5rem;max-width:60vw}
+.toggles button{border:1.5px solid #27406b;background:#f7f7f2;color:#27406b;padding:.35em 1em;border-radius:999px;cursor:pointer}
+.toggles button.is-on{background:#27406b;color:#f7f7f2}
+.legend{position:absolute;right:4vw;bottom:4vh;display:flex;gap:1rem;font-size:.85rem;color:#6b5442;background:#f7f4ea;padding:.4em .9em}
+.legend i{display:inline-block;width:.9em;height:.9em;border-radius:50%;margin-right:.3em;border:1px solid rgba(0,0,0,.2)}
+.steps{position:relative;margin-top:-100vh;pointer-events:none}
+.step{min-height:130vh}
+.step:last-child{min-height:180vh}
+.panel{opacity:0;position:absolute;top:6vh;left:220px;width:21em;max-width:50vw;background:#f7f7f2;color:#2b1d14;padding:1.3em 1.5em;border-left:4px solid #a85f26;box-shadow:0 4px 18px rgba(107,84,66,.16)}
+.panel h3{font-family:"Hina Mincho",serif;font-size:1.35rem;margin-bottom:.4em;line-height:1.5}
+.panel p{font-size:.92rem;color:#6a5b4e}
+
+/* ---------- 蔵で仕込む ---------- */
+#ch3{height:100vh;position:relative;overflow:hidden;background:#f7f7f2}
+#ch3 .viewport{width:100%;height:100%}
+#ch3 .viewport svg{width:100%;height:100%;display:block}
+.captions{position:absolute;left:6vw;bottom:8vh;width:26em;max-width:86vw}
+.caption{position:absolute;bottom:0;left:0;width:100%;visibility:hidden;background:#f7f7f2;border-left:4px solid #a85f26;padding:1em 1.3em;box-shadow:0 4px 18px rgba(107,84,66,.16)}
+.caption h3{font-family:"Hina Mincho",serif;font-size:1.35rem}
+.caption p{font-size:.92rem;color:#6a5b4e}
+.kura-title{position:absolute;top:5vh;left:4vw;z-index:2;color:#6b5442}
+.tour-nav{position:absolute;top:3vh;right:3vw;display:flex;flex-direction:column;gap:.3rem}
+.tour-nav button{background:#eceee6;border:1px solid #c9c6b8;color:#2b1d14;padding:.25em .9em;cursor:pointer;text-align:left}
+.tour-nav button:hover{border-color:#27406b;color:#27406b}
+
+/* ---------- おわり ---------- */
+#finale{min-height:90vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;padding:10vh 6vw}
+#bowl{width:420px;max-width:80vw}
+.finale-text{word-break:keep-all;overflow-wrap:anywhere;font-family:"Hina Mincho",serif;font-weight:400;font-size:1.5rem;line-height:2.2;letter-spacing:.06em;text-align:center;max-width:34em}
+.src-note{font-size:.78rem;color:#6a5b4e;margin-bottom:1.2em}
+.src-title{font-family:"Hina Mincho",serif;font-size:1rem;margin:2em 0 .6em}
+.sources{font-size:.78rem;line-height:1.8;max-width:52em;margin:0 auto;text-align:left;border-collapse:collapse}
+.sources th{text-align:left;padding:.5em .8em;border-bottom:2px solid #c9c6b8;font-weight:700}
+.sources td{padding:.7em .8em;border-bottom:1px solid #c9c6b8;vertical-align:top;color:#6a5b4e}
+.sources td:first-child{width:12em;color:#2b1d14}
+.sources a{color:#27406b}
+footer{padding:4vh 8vw 10vh;text-align:center;font-size:.85rem;color:#6a5b4e}
+
+/* 地図SVGの中の文字と線 */
+.pin text{font-family:"Zen Kaku Gothic New",sans-serif;font-size:13px;fill:#2b1d14;paint-order:stroke;stroke:#f7f7f2;stroke-width:3px}
+.region-label{font-family:"Hina Mincho",serif;font-size:15px;fill:#6a5b4e}
+.coast{fill:none;stroke:#7b6a58;stroke-width:1.5}
+
+/* ---------- スマホ(画面の幅が760px以下) ---------- */
+@media (max-width:760px){
+  .hero{height:auto;min-height:100vh;padding:6vh 6vw 14vh;display:flex;flex-direction:column;gap:1.5rem}
+  .hero-bowl{position:relative;left:auto;top:auto;transform:none;width:100%;max-width:100%;order:2}
+  .hero h1{position:static;order:1;writing-mode:horizontal-tb;white-space:nowrap;font-size:2.1rem;letter-spacing:.06em;line-height:1.35}
+  .quiz-q{font-size:1.6rem}
+  .quiz-options{grid-template-columns:1fr;gap:.7rem}
+  .quiz-btn{flex-direction:row;justify-content:space-between;flex-wrap:wrap;padding:1em}
+  .quiz-num{font-size:1.3rem}
+  .qv{max-width:140px}
+  #verdict-mark{font-size:3rem}
+  #verdict-text{font-size:1.3rem}
+  #modal h3{font-size:1.5rem}
+  .chapter-head h2{font-size:2rem}
+  #ch1{grid-template-columns:1fr;align-content:center;gap:1rem}
+  #ch1 .ch-title{writing-mode:horizontal-tb;font-size:1.8rem}
+  #barrel{max-width:260px}
+  .age .num{font-size:2.2rem}
+  .stage h3{font-size:3rem}
+  .map-title{font-size:1.6rem}
+  .toggles{top:auto;bottom:4vh;left:4vw;max-width:92vw}
+  .legend{display:none}
+  .panel{top:auto;bottom:3vh;left:4vw;width:92vw;max-width:92vw;padding:1em 1.2em}
+  .panel h3{font-size:1.1rem}
+  .panel p{font-size:.85rem}
+  .tour-nav{display:none}
+  .kura-title{writing-mode:horizontal-tb;font-size:1.6rem}
+  .finale-text{font-size:1.05rem}
+}
